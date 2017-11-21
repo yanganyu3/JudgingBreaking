@@ -1,0 +1,22 @@
+{
+  "name": "judgingbreaking",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yanganyu3/JudgingBreaking.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yanganyu3/JudgingBreaking/issues"
+  },
+  "homepage": "https://github.com/yanganyu3/JudgingBreaking#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
