@@ -86,5 +86,6 @@ app.get("/judgePage/newJudge/:name", function(req, res) {
 });
 
 
-module.exports = router;
-app.listen(3000);
+//module.exports = router;
+var port = process.env.PORT || 3000;
+app.listen(port);
