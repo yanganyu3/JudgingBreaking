@@ -18,6 +18,8 @@
   "homepage": "https://github.com/yanganyu3/JudgingBreaking#readme",
   "dependencies": {
     "ejs": "^2.5.7",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "firebase": "^4.6.2",
+    "firebase-admin": "^5.5.1"
   }
 }
