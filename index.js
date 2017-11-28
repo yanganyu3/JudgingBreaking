@@ -21,6 +21,13 @@ app.set('views','./views');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
+//start of the pages
+//main page
+app.get("/", function(req, res){
+    res.render('mainPage.ejs');
+})
+
+
 //lookup judge
 app.get("/judgePage/:name", function(req, res){
     var judgePage = require("./judgePage");
@@ -51,7 +58,7 @@ app.get("/judgePage/:name", function(req, res){
 //add judge
 app.get("/judgePage/newJudge/:name", function(req, res) {
     var judgePage = require("./judgePage");
-    console.log(" hello" + judgePage.name);
+    
     //upload to the database
     var judgeChildPath = judgesRef.child(req.params.name);
     
@@ -78,9 +85,6 @@ app.get("/judgePage/newJudge/:name", function(req, res) {
 
 });
 
-app.post("/judge/:id/:name/:email", function(req, res) {
-    console.log(req.params.id);    
-});
 
 module.exports = router;
 app.listen(3000);
