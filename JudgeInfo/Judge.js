@@ -4,8 +4,10 @@ module.exports = function(){
         experience: 0,
         country: "",
         style: "Breaking",
-        stats: "DO LATER"
-        
+        styleVotes: 0,
+        powerVotes: 0,
+        abstractVotes: 0,
+        foundationVotes: 0,
     }
 
 }
