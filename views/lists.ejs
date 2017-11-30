@@ -12,7 +12,12 @@
          
         <ul>
             <% for( var i = 0; i < arr.length; i++) { %>
-                <% var path = "judgePage/" + arr[i];%>
+                <% var path; %>
+                <% if ( whichList == "Events") {%>
+                    <% var path = "eventPage/" + arr[i]; %>
+                <% } else { %>
+                    <% var path = "judgePage/" + arr[i]; %>
+                <% } %>
                 <li> <a href=<%=path %>> <%= arr[i]%></a> </li>
             <% }%>
         </ul>

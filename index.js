@@ -13,8 +13,9 @@ firebase.initializeApp({
     credential: firebase.credential.cert(serviceAccount),
     databaseURL: "https://judgingbreaking.firebaseio.com"
 });
-var judgesRef = firebase.database().ref("Judges");
 
+var judgesRef = firebase.database().ref("Judges");
+var eventRef = firebase.database().ref("Events");
 
 //firebase database code end
 app.set('views','./views');
@@ -62,7 +63,110 @@ app.get("/judges", function(req, res){
 
 })
 //listEvents
+app.get("/events", function(req, res){
+    var arr = [];
+    console.log("getting all the events");
+    //get all names of judges
+    var val;
+  
+    eventRef.once('value', function(snapshot) {
+            
+        snapshot.forEach(function(data) {
+            
+            val = {
+                name: data.val().name,
+                judges: data.val().judges,
+                location: data.val().location,
+                style: data.val().style,
+                format: data.val().format,
+                MC: data.val().MC,
+                DJ: data.val().DJ,
+                prize: data.val().prize,
+                attendence: data.val().attendence
+            }
+            arr.push(val.name);
+        });
+        console.log(arr.length);
+        res.render('lists.ejs', {
+            whichList : "Events",
+            arr : arr
+        })
+        
+    })
+   
+    //sort them alphabetically at first
+    //pass array to ejs
 
+})
+//add Event
+app.get("/newEvent/:name", function(req, res) {
+
+    //upload to the database
+    var eventPath = eventRef.child(req.params.name);
+    
+    eventPath.update({
+        name: req.params.name, 
+        judges: ["TBA", "TBA", "TBA"],
+        location: "West Lafyatte",
+        style: "Breaking",
+        format: "2v2",
+        MC: "ME",
+        DJ: "ME",
+        prize: 300,
+        attendence: ["none at the moment"]
+    }, function(error) {
+        if (error) {
+          res.render('addEvents.ejs', {
+            eventName : req.params.name,
+            status: "Failed"});
+        } else {
+          
+          res.render('addEvents.ejs', {
+            eventName : req.params.name,
+            status: "Success"});
+        }
+    });
+
+});
+
+//lookup event
+app.get("/eventPage/:name", function(req, res){
+    
+    var ref = firebase.database().ref().child("Events/" + req.params.name);
+    ref.once('value', (snapshot) => {
+        if(!snapshot || !snapshot.val()) {
+            res.render('events.ejs', {
+                eventName: "ERROR",
+                judges: [],
+                location: "ERROR",
+                style: "ERROR",
+                battleFormat: "ERROR",
+                MC: "ERROR",
+                DJ: "ERROR",
+                prize: 0,
+                attendence: ["dammit1","dammit2", "dammit3"]
+            })
+        } else {
+            console.log("page found");
+            res.render('events.ejs', {
+                
+                eventName: snapshot.val().name,
+                judges: snapshot.val().judges,
+                location: snapshot.val().location,
+                style: snapshot.val().style,
+                battleFormat: snapshot.val().format,
+                MC: snapshot.val().MC,
+                DJ: snapshot.val().DJ,
+                prize: 100,
+                attendence: ["dammit1","dammit2", "dammit3"]
+            })
+        }
+    });
+    //not found upload error page
+    
+});
+//
+//EVENT FUNCTIONS FINISH
 //lookup judge
 app.get("/judgePage/:name", function(req, res){
     var judgePage = require("./judgePage");

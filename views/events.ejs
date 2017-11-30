@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset ="UTF-8">
+        <title><%= eventName %></title>
+        <link rel = 'stylesheet' href='/stylesheets/style.css'/>
+    </head>
+    <body>
+        <h1><%= eventName%> </h1>
+        <h2>FORMAT</h2>
+            <p><%= battleFormat%> <%= style%></p>
+        <h2>PRIZE</h2>
+            <p><%= prize %></p>
+        <h2>LOCATION</h2>
+            <p><%= location%></p>
+        <h2>JUDGES</h2>
+            <ul>
+                <% for (var i = 0; i < judges.length; i++) { %>
+                    <li><%= judges[i] %></li>
+                <% } %>
+            </ul>
+        <h2>MC</h2>
+            <p> <%=MC%> </p>
+        <h2>DJ</h2>
+            <p> <%=DJ%></p>
+        <h2>SIGNUP LIST</h2>
+            <ul>
+                <% for(var i = 0; i < attendence.length; i++) { %>
+                    <li><%= attendence[i] %></li>
+                <% } %>
+            </ul>
+    </body>
+</html>

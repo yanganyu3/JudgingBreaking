@@ -1,14 +1,14 @@
 module.exports = function(){
     return {
-        Name: "",
-        Judges: [3],
-        Location: "",
-        Style: "Breaking",
-        Format: "",
+        name: "",
+        judges: [3],
+        location: "",
+        style: "Breaking",
+        format: "",
         MC: "",
         DJ: "",
-        Prize: 0,
-        Attendence: [],
+        prize: 0,
+        attendence: [],
 
     }
 
