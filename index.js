@@ -27,6 +27,41 @@ app.get("/", function(req, res){
     res.render('mainPage.ejs');
 })
 
+//listJudges
+app.get("/judges", function(req, res){
+    var arr = [];
+    console.log("getting all the judges");
+    //get all names of judges
+    var val;
+  
+    judgesRef.once('value', function(snapshot) {
+            
+        snapshot.forEach(function(data) {
+            
+            val = {
+                name : data.val().name,
+                experience : data.val().experience,
+                style : data.val().style,
+                styleVotes : data.val().styleVotes,
+                powerVotes : data.val().powerVotes,
+                abstractVotes : data.val().abstractVotes, 
+                foundationVotes : data.val().foundationVotes, 
+            }
+            arr.push(val.name);
+        });
+        console.log(arr.length);
+        res.render('lists.ejs', {
+            whichList : "Judges",
+            arr : arr
+        })
+        
+    })
+   
+    //sort them alphabetically at first
+    //pass array to ejs
+
+})
+//listEvents
 
 //lookup judge
 app.get("/judgePage/:name", function(req, res){
