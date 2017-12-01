@@ -3,6 +3,8 @@ var express = require("express"); //get the express server
 var app = express(); //express init server, server is running and grab all functions
 var path = require("path");
 var router = express.Router();
+var bodyParser = require('body-parser');
+var urlencodedParser = bodyParser.urlencoded({ extended: false});
 //express code end
 
 //firebase database code start
@@ -99,34 +101,46 @@ app.get("/events", function(req, res){
 
 })
 //add Event
-app.get("/newEvent/:name", function(req, res) {
+app.get("/newEvent", function(req, res) {
 
-    //upload to the database
-    var eventPath = eventRef.child(req.params.name);
+    res.render("addEvents.ejs");    
+});
+
+app.post("/newEvent", urlencodedParser, function(req, res){
+
     
+    var judgeArray = req.body.judges.split(',')
+    var eventName = req.body.name;
+    if(eventName.includes(" ") >=0) {
+       eventName =  eventName.replace(/ /g,"_");
+        
+    }
+    var eventPath = eventRef.child(eventName);
+    console.log(eventName);
     eventPath.update({
-        name: req.params.name, 
-        judges: ["TBA", "TBA", "TBA"],
-        location: "West Lafyatte",
-        style: "Breaking",
-        format: "2v2",
-        MC: "ME",
-        DJ: "ME",
-        prize: 300,
+        name: eventName, 
+        judges: judgeArray,
+        location: req.body.location,
+        style: req.body.style,
+        format: req.body.format,
+        MC: req.body.MC,
+        DJ: req.body.DJ,
+        prize: req.body.prize,
         attendence: ["none at the moment"]
     }, function(error) {
         if (error) {
-          res.render('addEvents.ejs', {
-            eventName : req.params.name,
-            status: "Failed"});
-        } else {
-          
-          res.render('addEvents.ejs', {
-            eventName : req.params.name,
-            status: "Success"});
-        }
+            res.render('successfulAdd.ejs', {
+              name : req.body.name,
+              typeOfNew: "Event",
+              status: "Failed"});
+          } else {
+            
+            res.render('successfulAdd.ejs', {
+              name : req.body.name,
+              typeOfNew: "Event",
+              status: "Success"});
+          }
     });
-
 });
 
 //lookup event
@@ -148,6 +162,10 @@ app.get("/eventPage/:name", function(req, res){
             })
         } else {
             console.log("page found");
+            var eventName = snapshot.val().name;
+            if(eventName.includes(' ') >= 0 ){
+                eventName.replace(/ /g, '_');
+            }
             res.render('events.ejs', {
                 
                 eventName: snapshot.val().name,
@@ -195,36 +213,41 @@ app.get("/judgePage/:name", function(req, res){
 });
 
 //add judge
-app.get("/judgePage/newJudge/:name", function(req, res) {
-    var judgePage = require("./judgePage");
+app.get("/newJudge", function(req, res) {
     
     //upload to the database
-    var judgeChildPath = judgesRef.child(req.params.name);
+    res.render('addJudge.ejs');
+    
+
+});
+
+app.post("/newJudge",urlencodedParser, function(req ,res){
+    //include lookup for judge already existing in the database
+    var judgeChildPath = judgesRef.child(req.body.name);
     
     judgeChildPath.update({
-        "name" : req.params.name,
-        "experience" : 0,
-        "style" : "breaking",
+        "name" : req.body.name,
+        "experience" : req.body.experience,
+        "style" : req.body.style,
         "styleVotes": 0,
         "powerVotes": 0,
         "abstractVotes": 0,
         "foundationVotes": 0,
     }, function(error) {
         if (error) {
-          res.render('addJudge.ejs', {
-            judgeName : req.params.name,
+          res.render('successfulAdd.ejs', {
+            name : req.body.name,
+            typeOfNew: "Judge",
             status: "Failed"});
         } else {
           
-          res.render('addJudge.ejs', {
-            judgeName : req.params.name,
+          res.render('successfulAdd.ejs', {
+            name : req.body.name,
+            typeOfNew: "Judge",
             status: "Success"});
         }
     });
-
-});
-
-
-//module.exports = router;
+})
+module.exports = router;
 var port = process.env.PORT || 3000;
 app.listen(port);

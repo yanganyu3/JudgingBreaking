@@ -2,18 +2,18 @@
 <html>
     <head>
         <meta charset ="UTF-8">
-        <title><%= judgeName %></title>
+        <title>New Judge</title>
         <link rel = 'stylesheet' href='/stylesheets/style.css'/>
     </head>
     <body>
-        <% if ( status == "Success") { %>
-            <h1><%= status %></h1>
-                <p>Judge has been added!!
-                </p>
-        <% }  else { %>
- 
-            <h1><%= status %></h1>
-                <p>Judge has not been added.</p>
-          <% } %>
+        <form name= "judgeInput" method="POST" action="/newJudge">
+                Dancing Name: <input type="text" name= "name"/><br><br>
+                Number of years you have danced?: <input type="text" name= "experience"/><br><br>
+                What country do you represent?: <input type="text" name="country?"/><br><br>
+                What Style(s) do you dance?: <input type="text" name="style"/><br><br>
+                Judging Paradigms/Preferences <input type="text" name="paradigm"/><br><br>
+                <input type="submit" value= "Submit Judge Info!"/><br><br>
+        </form>
+        
     </body>
 </html>

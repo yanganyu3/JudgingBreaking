@@ -2,18 +2,20 @@
 <html>
     <head>
         <meta charset ="UTF-8">
-        <title><%= eventName %></title>
+        <title>New Event</title>
         <link rel = 'stylesheet' href='/stylesheets/style.css'/>
     </head>
     <body>
-        <% if ( status == "Success") { %>
-            <h1><%= status %></h1>
-                <p>Event has been added!!
-                </p>
-        <% }  else { %>
- 
-            <h1><%= status %></h1>
-                <p>Event has not been added.</p>
-          <% } %>
+            <form name= "eventInput" method="POST" action="/newEvent">
+                Event Name <input type="text" name= "name"/><br><br>
+                Judges (separate with commas) <input type="text" name= "judges"/><br><br>
+                Where <input type="text" name="location"/><br><br>
+                Format <input type="text" name="style"/><br><br>
+                Style <input type="text" name="format"/><br><br>
+                MC(s) <input type="text" name="MC"/><br><br>
+                DJ(s) <input type="text" name="DJ"/><br><br>
+                Prize <input type="text" name="prize"/><br><br>
+                <input type="submit" value= "Submit New Event Info!"/><br><br>
+        </form>
     </body>
 </html>

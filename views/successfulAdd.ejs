@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset ="UTF-8">
+        <title>New <%= typeOfNew%></title>
+        <link rel = 'stylesheet' href='/stylesheets/style.css'/>
+    </head>
+    <body>
+        <% if ( status == "Success") { %>
+            <h1><%= status %></h1>
+                <p><%= name%> has been added!!
+                </p>
+        <% }  else { %>
+ 
+            <h1><%= status %></h1>
+                <p><%= name%> has not been added.</p>
+          <% } %>
+    </body>
+</html>

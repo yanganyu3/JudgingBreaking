@@ -13,12 +13,13 @@
         <ul>
             <% for( var i = 0; i < arr.length; i++) { %>
                 <% var path; %>
+                <% var listName = arr[i].replace(/_/g," ")%>
                 <% if ( whichList == "Events") {%>
                     <% var path = "eventPage/" + arr[i]; %>
                 <% } else { %>
                     <% var path = "judgePage/" + arr[i]; %>
                 <% } %>
-                <li> <a href=<%=path %>> <%= arr[i]%></a> </li>
+                <li> <a href=<%=path %>> <%= listName%></a> </li>
             <% }%>
         </ul>
     </p>
