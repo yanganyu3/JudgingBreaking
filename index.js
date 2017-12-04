@@ -18,7 +18,7 @@ firebase.initializeApp({
 
 var judgesRef = firebase.database().ref("Judges");
 var eventRef = firebase.database().ref("Events");
-
+var usersRef = firebase.database().ref("Users");
 //firebase database code end
 app.set('views','./views');
 app.engine('html', require('ejs').renderFile);
@@ -248,6 +248,122 @@ app.post("/newJudge",urlencodedParser, function(req ,res){
         }
     });
 })
+//end judge info
+//start User code
+//list users
+app.get("/users", function(req, res){
+    var arr = [];
+    console.log("getting all the events");
+    //get all names of judges
+    var val;
+  
+    usersRef.once('value', function(snapshot) {
+            
+        snapshot.forEach(function(data) {
+            
+            val = {
+                name : data.val().name,
+                crew : data.val().crew,
+                style: data.val().style,
+                country: data.val().country,
+                events: data.val().events,
+                nextEvent: data.val().nextEvent,
+                styleRanking: data.val().styleRanking,
+                powerRanking: data.val().powerRanking,
+                abstractRanking: data.val().abstractRanking,
+                judge: data.val().judge
+            }
+            arr.push(val.name);
+        });
+        console.log(arr.length);
+        res.render('lists.ejs', {
+            whichList : "Users",
+            arr : arr
+        })
+        
+    })
+   
+    //sort them alphabetically at first
+    //pass array to ejs
+
+})
+//lookup User
+app.get("/userPage/:name", function(req, res){
+    
+    var ref = firebase.database().ref().child("Users/" + req.params.name);
+    ref.once('value', (snapshot) => {
+        if(!snapshot || !snapshot.val()) {
+            res.render('user.ejs', {
+                name : "ERROR, USER NOT FOUND",
+                crew : "",
+                style: "",
+                country: "",
+                events: "NA",
+                nextEvent: "",
+                styleRanking: 0,
+                powerRanking: 0,
+                abstractRanking: 0,
+                judge: false
+            })
+        } else {
+            res.render('user.ejs', {
+                name : snapshot.val().name,
+                crew : snapshot.val().crew,
+                style: snapshot.val().style,
+                events: snapshot.val().events,
+                country: snapshot.val().country,
+                nextEvent: snapshot.val().nextEvent,
+                styleRanking: snapshot.val().styleRanking,
+                powerRanking: snapshot.val().powerRanking,
+                abstractRanking: snapshot.val().abstractRanking,
+                judge: snapshot.val().judge
+                
+            })
+        }
+    });
+    //not found upload error page
+    
+});
+
+//add user
+app.get("/newUser", function(req, res) {
+    
+    //upload to the database
+    res.render('addUser.ejs');
+    
+
+});
+
+app.post("/newUser",urlencodedParser, function(req ,res){
+    //include lookup for user already existing in the database
+    var userChildPath = usersRef.child(req.body.name);
+    
+    userChildPath.update({
+        "name" : req.body.name,
+        "crew" : req.body.crew,
+        "style" : req.body.style,
+        "events": "None",
+        "country": req.body.country,
+        "judge": false,
+        "styleRanking": req.body.styleRanking,
+        "powerRanking": req.body.powerRanking,
+        "abstractRanking" : req.body.abstractRanking
+    }, function(error) {
+        if (error) {
+          res.render('successfulAdd.ejs', {
+            name : req.body.name,
+            typeOfNew: "User",
+            status: "Failed"});
+        } else {
+          
+          res.render('successfulAdd.ejs', {
+            name : req.body.name,
+            typeOfNew: "User",
+            status: "Success"});
+        }
+    });
+})
+//end user code
 module.exports = router;
 var port = process.env.PORT || 3000;
 app.listen(port);

@@ -9,18 +9,24 @@
         <%include ./header.ejs%>
     </body>
     <p>
-         
+        <% var newPage; %> 
         <ul>
             <% for( var i = 0; i < arr.length; i++) { %>
                 <% var path; %>
                 <% var listName = arr[i].replace(/_/g," ")%>
                 <% if ( whichList == "Events") {%>
                     <% var path = "eventPage/" + arr[i]; %>
+                    <% newPage = "/newEvent" %>
+                <% } else if(whichList == "Users") { %>
+                    <% var path = "userPage/" + arr[i]; %>
+                    <% newPage = "/newUser" %>
                 <% } else { %>
-                    <% var path = "judgePage/" + arr[i]; %>
-                <% } %>
+                    <% var path = "judgePage/" + arr[i];  %>
+                    <% newPage = "/newJudge"; } %>
                 <li> <a href=<%=path %>> <%= listName%></a> </li>
             <% }%>
         </ul>
+
+        <a href=<%=newPage%>> Make New <%= whichList%></a>
     </p>
 </html>

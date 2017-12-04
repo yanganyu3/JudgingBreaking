@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset ="UTF-8">
+        <title><%= name %></title>
+        <link rel = 'stylesheet' href='/stylesheets/style.css'/>
+    </head>
+    <body>
+        <h1><%= name%></h1>
+        <h1>Crew:</h1>
+            <p><%= crew%></p>
+        <h1>Style</h1>
+            <p><%= style%></p>
+        <h1>Events Previously Attended</h1>
+            
+            <p><%= events%></p>
+        <h1>Country</h1>
+        
+            <p><%= country%></p>
+        <h1>Next Event</h1>
+            <p><%= nextEvent%></p>
+        <h2>Style Priority: <%= styleRanking%></h2>
+        <h2>Power Priority: <%= powerRanking%></h2>
+        <h2>Abstract Priority: <%= abstractRanking%></h2>
+        <% var path; %>
+        <%if (judge == true) {%>
+            <% path = "/judgePage/" + name; %>
+            <a href=<%=path %>><%=name%>'s Judge Page</a>
+        <% } else {%> 
+            <% path = "/newJudge" %>
+            <a href=<%=path %>> Make Judge Page</a>
+        <% }%>
+        
+    </body>
+</html>
