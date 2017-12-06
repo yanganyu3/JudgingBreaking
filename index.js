@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 //express code end
 //static directory for images
-console.log(__dirname);
 //firebase database code start
 var firebase = require('firebase-admin');
 var serviceAccount = require("./judgingbreaking-firebase-adminsdk-egkcj-843b81f899.json")
@@ -24,7 +23,7 @@ var usersRef = firebase.database().ref("Users");
 app.set('views', './views');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'ejs');
-app.use( express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/public"));
 
 
 //start of the pages
@@ -172,6 +171,7 @@ app.get("/eventPage/:name", function (req, res) {
             if (eventName.includes(' ') >= 0) {
                 eventName.replace(/ /g, '_');
             }
+            
             res.render('events.ejs', {
 
                 eventName: snapshot.val().name,
@@ -198,27 +198,32 @@ app.get("/judgePage/:name", function (req, res) {
     console.log("looking up judge" + req.params.name)
 
     var ref = firebase.database().ref().child("Judges/" + req.params.name);
-    getJudge(req, res).then(judge1 => {
-        ref.once('value', (snapshot) => {
-            if(judge1.name == "ERROR"){
-                res.render('judge.ejs', {
-                    judgeName: "ERROR",
-                    experience: "ERROR",
-                    style: "ERROR",
-                    paradigms: "ERROR",
-                    stats: ["ERROR","ERROR","ERROR"]
-                })
-            }
-            res.render('judge.ejs', {
-                judgeName: judge1.name,
-                experience: judge1.experience,
-                style: judge1.style,
-                paradigms: judge1.paradigms,
-                stats: judge.calcStats(judge1)
-            })
-        });
-    }).catch(err => res.send(400))
 
+ref.once('value', (snapshot) => {
+    if (!snapshot || !snapshot.val()) {
+        res.render('judge.ejs', {
+            eventName: "ERROR",
+            judges: [],
+            location: "ERROR",
+            style: "ERROR",
+            battleFormat: "ERROR",
+            MC: "ERROR",
+            DJ: "ERROR",
+            prize: 0,
+            attendence: ["ERROR"]
+        })
+    } else {
+        
+        res.render('judge.ejs', {
+
+            judgeName: snapshot.val().name,
+            experience: snapshot.val().experience,
+            style: snapshot.val().style,
+            paradigms: snapshot.val().paradigms,
+            judgeInfo: snapshot.val()
+        })
+    }
+});
     //not found upload error page
 
 });
@@ -273,20 +278,20 @@ app.post("/newJudge", urlencodedParser, function (req, res) {
     });
 })
 //vote judging
-app.get("/judgePage/:judgeName/vote", function (req, res) {
+app.get("/judgePage/:name/vote", function (req, res) {
 
     res.render("../views/votingPage.ejs", {
         dancer1: "Day",
         dancer2: "Ice",
-        judgeName: req.params.judgeName
+        name: req.params.name
     });
 })
 
-app.post("/judgePage/:judgeName/vote", urlencodedParser, function (req, res) {
+app.post("/judgePage/:name/vote", urlencodedParser, function (req, res) {
     console.log("voting done, calculating now!");
 
     var judge = require("./JudgeInfo/Judge");
-    var ref1 = firebase.database().ref().child("Judges/" + req.params.judgeName);
+    var ref1 = firebase.database().ref().child("Judges/" + req.params.name);
 
     console.log("Users/" + req.body.winner);
     getJudge(req, res).then(judge1 => {
@@ -309,11 +314,11 @@ app.post("/judgePage/:judgeName/vote", urlencodedParser, function (req, res) {
 var getJudge = (req, res) => {
     return new Promise((resolve, reject) => {
         var judge1 = {};
-        var ref1 = firebase.database().ref().child("Judges/" + req.params.judgeName);
-        console.log("Judges/" + req.params.judgeName);
+        var ref1 = firebase.database().ref().child("Judges/" + req.params.name);
+        console.log("Judges/" + req.params.name);
         ref1.once('value', (snapshot) => {
             if (!snapshot || !snapshot.val()) {
-
+                console.log("there was a fucking error");
                 judge1.name = "ERROR",
                     judge1.experience = "ERROR",
                     judge1.style = "ERROR",
@@ -322,13 +327,14 @@ var getJudge = (req, res) => {
                     judge1.abstractVotes = 0
 
             } else {
-
                 judge1.name = snapshot.val().name,
                     judge1.experience = snapshot.val().country,
                     judge1.style = snapshot.val().style,
                     judge1.styleVotes = snapshot.val().styleVotes,
                     judge1.powerVotes = snapshot.val().powerVotes,
                     judge1.abstractVotes = snapshot.val().abstractVotes
+                console.log(judge1);
+
             }
         })
         resolve(judge1);
@@ -397,7 +403,7 @@ app.get("/users", function (req, res) {
 })
 //lookup User
 app.get("/userPage/:name", function (req, res) {
-
+    
     var ref = firebase.database().ref().child("Users/" + req.params.name);
     ref.once('value', (snapshot) => {
         if (!snapshot || !snapshot.val()) {
@@ -414,6 +420,10 @@ app.get("/userPage/:name", function (req, res) {
                 judge: false
             })
         } else {
+            var userName = req.params.name;
+            if (userName.includes(' ') >= 0) {
+                userName.replace(/ /g, '_');
+            }
             res.render('user.ejs', {
                 name: snapshot.val().name,
                 crew: snapshot.val().crew,
@@ -443,11 +453,17 @@ app.get("/newUser", function (req, res) {
 });
 
 app.post("/newUser", urlencodedParser, function (req, res) {
+    
+    var userName = req.body.name;
+    if (userName.includes(" ") >= 0) {
+        userName = userName.replace(/ /g, "_");
+
+    }
     //include lookup for user already existing in the database
     var userChildPath = usersRef.child(req.body.name);
 
     userChildPath.update({
-        "name": req.body.name,
+        "name": userName,
         "crew": req.body.crew,
         "style": req.body.style,
         "events": "None",

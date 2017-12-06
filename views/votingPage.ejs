@@ -9,7 +9,7 @@
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>    </head>
     <body>
         <h1>Competitors:</h1>
-        <% var judgePath = "/judgePage/" + judgeName + "/vote"%>
+        <% var judgePath = "/judgePage/" + name + "/vote"%>
         <form name= "Judge Decision" method="POST" action=<%= judgePath%>>
             <%= dancer1%> <input type="radio" name = "winner" value = <%= dancer1%>><br>
             <%= dancer2%> <input type="radio" name = "winner" value = <%= dancer2%>><br>

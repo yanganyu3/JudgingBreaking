@@ -44,5 +44,6 @@ var calcStats = function(Judge){
     return result;
 }
 
+
 module.exports.addStat = addStats;
 module.exports.calcStats = calcStats;
