@@ -1,3 +1,5 @@
+var index = require("../index.js");
+
 module.exports = function(){
     return {
         name: "",
@@ -14,6 +16,5 @@ module.exports = function(){
     }
 
 }
+var eventRef = firebase.database().ref("Events");
 
-
-//app.get("/event/MakeRound")

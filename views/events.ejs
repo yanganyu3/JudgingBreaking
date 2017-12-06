@@ -9,15 +9,41 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     </head>
+    <style>
+     h1{
+        text-align: center
+     }
+    
+    </style>
     <body>
         <%include ./header.ejs%><br>
-        <h1><%= eventName%> </h1>
-        <h2>FORMAT</h2>
-            <p><%= battleFormat%> <%= style%></p>
-        <h2>Date</h2>
-            <p><%= date%></p>
-        <h2>PRIZE</h2>
-            <p><%= prize %></p>
+        <div class="container">
+            <div class ="jumbotron">
+                <div class ="container-fluid">
+                    <div class= "row">
+                        <div class="col-md-12">
+                            <h1>
+                                <%= eventName%> </h1>
+                            </div>
+                    </div>
+                    <div class = "row">
+                        <div class="col-md-4">
+                    <h2>FORMAT</h2>
+                        <p><%= battleFormat%> <%= style%></p>
+                        </div>
+                        <div class="col-md-4">    
+                            <h2>DATE</h2>
+                            <p><%= date%></p>
+                        </div>
+                        <div class="col-md-4">
+                    <h2>PRIZE</h2>
+                        <p><%= prize %></p>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <h2>LOCATION</h2>
             <p><%= location%></p>
         <h2>JUDGES</h2>
@@ -35,12 +61,31 @@
         <h2>DJ</h2>
             <p> <%=DJ%></p>
         <h2>SIGNUP LIST</h2>
-            <ul>
-                <% for(var i = 0; i < attendence.length; i++) { %>
-                    <li><%= attendence[i] %></li>
-                <% } %>
-            </ul>
-        <% var eventSignUp = "/events/" + eventName + "/signUpPage" %>
-        <a href=<%=eventSignUp %>>Sign Up!</a>    
+            
+        <% var eventSignUp = "/eventPage/" + eventName + "/signUp" %>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Signed-Up </th>
+                </tr>
+            </thead>
+            <tbody> 
+            <% if( attendence.length > 1 ) { %>
+            <% for( var i = 1; i < attendence.length; i++) { %>
+                <% var path = "/judgePage/" + attendence[i]; %>
+                
+                <tr>
+                <td> <a href=<%=path %>> <%=attendence[i]%></a> </td>
+                </tr>
+                <% }%>
+            <% } else {%>
+                <tr>
+                        <td> Currently No Entries! </td>
+                        </tr>
+            <% } %>
+            </tbody>
+        </table>   
+        <a href=<%=eventSignUp %>>Sign Up!</a> 
     </body>
 </html>

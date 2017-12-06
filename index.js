@@ -1,6 +1,6 @@
 //express code start
 var express = require("express"); //get the express server
-var app = express(); //express init server, server is running and grab all functions
+var app = module.exports = express(); //express init server, server is running and grab all functions
 var path = require("path");
 var router = express.Router();
 var bodyParser = require('body-parser');
@@ -171,6 +171,7 @@ app.get("/eventPage/:name", function (req, res) {
             if (eventName.includes(' ') >= 0) {
                 eventName.replace(/ /g, '_');
             }
+            var attendenceArray = Object.keys(snapshot.val().attendence);
             
             res.render('events.ejs', {
 
@@ -182,7 +183,7 @@ app.get("/eventPage/:name", function (req, res) {
                 MC: snapshot.val().MC,
                 DJ: snapshot.val().DJ,
                 prize: snapshot.val().prize,
-                attendence: snapshot.val().attendence,
+                attendence: attendenceArray,
                 date: snapshot.val().date
             })
         }
@@ -191,6 +192,45 @@ app.get("/eventPage/:name", function (req, res) {
 
 });
 //
+//sign up for the event
+app.get("/eventPage/:eventName/signUp", function(req, res){
+    console.log(req.params.eventName);
+    res.render("../views/eventSignUp.ejs", {
+        eventName: req.params.eventName
+    });
+})
+
+app.post("/eventPage/:eventName/signUp",urlencodedParser, function(req, res){
+    var eventName = req.params.eventName;
+    if (eventName.includes(" ") >= 0) {
+        eventName = eventName.replace(/ /g, "_");
+
+    }
+    var eventPath = eventRef.child(eventName).child("attendence").child(req.body.name);
+
+    console.log(eventName);
+    eventPath.update({
+        crew: req.body.crew,
+        country: req.body.country
+    }, function (error) {
+        if (error) {
+            res.render('successfulAdd.ejs', {
+                name: req.body.name,
+                typeOfNew: "Event",
+                status: "Failed"
+            });
+        } else {
+
+            res.render('successfulAdd.ejs', {
+                name: req.body.name,
+                typeOfNew: "Event",
+                status: "Success"
+            });
+        }
+    });
+
+})
+
 //EVENT FUNCTIONS FINISH
 //lookup judge
 app.get("/judgePage/:name", function (req, res) {
@@ -202,15 +242,11 @@ app.get("/judgePage/:name", function (req, res) {
 ref.once('value', (snapshot) => {
     if (!snapshot || !snapshot.val()) {
         res.render('judge.ejs', {
-            eventName: "ERROR",
-            judges: [],
-            location: "ERROR",
-            style: "ERROR",
-            battleFormat: "ERROR",
-            MC: "ERROR",
-            DJ: "ERROR",
-            prize: 0,
-            attendence: ["ERROR"]
+            judgeName: "ERROR, JUDGE NOT REGISTERED/IN DATABASE",
+            experience: "N/A",
+            style: "N/A",
+            paradigms: "N/A",
+            judgeInfo: "NULL"
         })
     } else {
         
@@ -278,6 +314,7 @@ app.post("/newJudge", urlencodedParser, function (req, res) {
     });
 })
 //vote judging
+//get round
 app.get("/judgePage/:name/vote", function (req, res) {
 
     res.render("../views/votingPage.ejs", {

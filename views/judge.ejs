@@ -12,11 +12,17 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> </head>
 
 <body>
-
     <%include ./header.ejs%>
         <%
     var calcStats = function(judge){
         var totalVotes = judge.styleVotes + judge.powerVotes + judge.abstractVotes ;
+        if(totalVotes == 0){
+            return{
+                "style" : "Voted Style: " + 0 + "% of the time",
+            "power" : "Voted Power: " + 0 + "% of the time",
+            "abstract" : "Voted Abstract: " + 0 + "% of the time",
+            }
+        }
         return{
         
         "style" : "Voted Style: " + judge.styleVotes/totalVotes * 100 + "% of the time",
@@ -62,6 +68,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <% if(judgeInfo != "NULL"){ %>
                             <%var stat = calcStats(judgeInfo)%>
                             <% console.log(stat)%>
                                         <tr>
@@ -76,6 +83,7 @@
                                             <td> Abstract </td>
                                             <td> <%= stat.abstract %></td>
                                         </tr>
+                            <%}%>
                         </tbody>
                     </table>
                     
