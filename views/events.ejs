@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset ="UTF-8">
+        
         <title><%= eventName %></title>
-        <link rel = 'stylesheet' href='/stylesheets/style.css'/>
+        <meta charset ="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">        
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     </head>
     <body>
+        <%include ./header.ejs%><br>
         <h1><%= eventName%> </h1>
         <h2>FORMAT</h2>
             <p><%= battleFormat%> <%= style%></p>
+        <h2>Date</h2>
+            <p><%= date%></p>
         <h2>PRIZE</h2>
             <p><%= prize %></p>
         <h2>LOCATION</h2>
@@ -16,7 +23,11 @@
         <h2>JUDGES</h2>
             <ul>
                 <% for (var i = 0; i < judges.length; i++) { %>
-                    <li><%= judges[i] %></li>
+
+                    <% var judgePath = "/judgePage/" + judges[i]; %>
+                    <% console.log(judgePath + "\n"); %>
+                    <li><a href=<%= judgePath %> > <%= judges[i ]%></a></li>
+
                 <% } %>
             </ul>
         <h2>MC</h2>
@@ -29,5 +40,7 @@
                     <li><%= attendence[i] %></li>
                 <% } %>
             </ul>
+        <% var eventSignUp = "/events/" + eventName + "/signUpPage" %>
+        <a href=<%=eventSignUp %>>Sign Up!</a>    
     </body>
 </html>

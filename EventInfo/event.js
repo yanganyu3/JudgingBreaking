@@ -9,7 +9,10 @@ module.exports = function(){
         DJ: "",
         prize: 0,
         attendence: [],
+        date: "TBA"
 
     }
 
 }
+
+

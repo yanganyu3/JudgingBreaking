@@ -3,9 +3,13 @@
     <head>
         <meta charset ="UTF-8">
         <title>New Judge</title>
-        <link rel = 'stylesheet' href='/stylesheets/style.css'/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">        
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     </head>
     <body>
+        <%include ./header.ejs%><br>
         <form name= "userInput" method="POST" action="/newUser">
                 Dancing Name: <input type="text" name= "name"/><br><br>
                 What Crew Are You In (Put N/A If Not In A Crew): <input type="text" name= "crew"/><br><br>

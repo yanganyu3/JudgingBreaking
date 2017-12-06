@@ -1,19 +1,59 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset ="UTF-8">
-        <title><%= judgeName %></title>
-        <link rel = 'stylesheet' href='/stylesheets/style.css'/>
-    </head>
-    <body>
-        <h1>Experience in <%= style %></h1>
-            <p>This is the Judge's experience!
-                I've been dancing for <%=experience %> years!
-            </p>
-        <h2>Paradigms</h2>
-            <p>These are the <%=judgeName%>'s paradigms!</p>
-        <h3>Photo</h3>
-        <h4>Voting Statistics</h4>
-            <p><%= stats %></p>
-    </body>
+
+<head>
+
+    <title>Judge Page </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">"
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> </head>
+
+<body>
+
+    <%include ./header.ejs%>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>
+                        <%= judgeName%>
+                    </h1>
+                    
+                    <img src="/stockPhoto.jpg" width="100" height="100">
+
+                    <h2>Experience in
+                        <%= style %>
+                    </h2>
+                    <p> I've been dancing for
+                        <%=experience %> years!</p>
+
+                </div>
+
+                <div class="col-md-6">
+                    <h1>
+                        <%= judgeName %>'s Paradigms</h1>
+                    <p>
+                        <%= paradigms %>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12"></div>
+                <table class="table">
+                    <thead>
+                        <
+                    </thead>
+                </table>
+                    <h2>Voting Statistics</h2>
+                        
+                            
+                        
+                </div>
+            </div>
+        </div>
+</body>
+
 </html>

@@ -3,9 +3,14 @@
     <head>
         <meta charset ="UTF-8">
         <title>New <%= typeOfNew%></title>
-        <link rel = 'stylesheet' href='/stylesheets/style.css'/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">        
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     </head>
     <body>
+        <%include ./header.ejs%>
+
         <% if ( status == "Success") { %>
             <h1><%= status %></h1>
                 <p><%= name%> has been added!!
@@ -15,5 +20,6 @@
             <h1><%= status %></h1>
                 <p><%= name%> has not been added.</p>
           <% } %>
+          <a href="/">Back To Main Page</a>
     </body>
 </html>
