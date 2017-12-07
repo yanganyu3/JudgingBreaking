@@ -8,16 +8,22 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>    </head>
     <body>
-        <h1>Competitors:</h1>
-        <% var judgePath = "/judgePage/" + name + "/vote"%>
-        <form name= "Judge Decision" method="POST" action=<%= judgePath%>>
-            <% for(var i = 1; i < competitors.length; i++) {%>
-            <%= competitors[i]%> : <input type= "radio" name = "winner"  value = <%= competitors[i]%> ><br>
-            <% }%> 
-            Tie: <input type="radio" name = "winner" value = "TIE"><br>
-
-            <input type="submit" value= "Vote!"/><br><br>
+        <div class="container">
+            <div class="jumbotron">
+                    <h1>Competitors:</h1>
+                    <% var judgePath = "/judgePage/" + name + "/vote"%>
+                    <form name= "Judge Decision" method="POST" action=<%= judgePath%>>
+                        <% for(var i = 1; i < competitors.length; i++) {%>
+                        <%= competitors[i]%> : <input type= "radio" name = "winner"  value = <%= competitors[i]%> ><br>
+                        <% }%> 
+                        Tie: <input type="radio" name = "winner" value = "TIE"><br>
             
-        </form>
+                        <input type="submit" value= "Vote!"/><br><br>
+                        
+                    </form>
+
+            </div>
+        </div>
+        
     </body>
 </html>
