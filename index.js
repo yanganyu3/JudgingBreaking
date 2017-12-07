@@ -240,7 +240,10 @@ app.post("/eventPage/:eventName/signUp", urlencodedParser, function (req, res) {
 app.get("/judgePage/:name", function (req, res) {
     var judge = require("./JudgeInfo/Judge");
     console.log("looking up judge" + req.params.name)
-
+    var printName = req.params.name;
+    if (printName.includes('_') >= 0) {
+        printName = printName.replace(/_/g , ' ');
+    }
     var ref = firebase.database().ref().child("Judges/" + req.params.name);
 
     ref.once('value', (snapshot) => {
@@ -256,7 +259,7 @@ app.get("/judgePage/:name", function (req, res) {
 
             res.render('judge.ejs', {
 
-                judgeName: snapshot.val().name,
+                judgeName: printName,
                 experience: snapshot.val().experience,
                 style: snapshot.val().style,
                 paradigms: snapshot.val().paradigms,
@@ -279,11 +282,17 @@ app.get("/newJudge", function (req, res) {
 
 app.post("/newJudge", urlencodedParser, function (req, res) {
     //include lookup for judge already existing in the database
-    var judgeChildPath = judgesRef.child(req.body.name);
+    
     //change user judge setting to true
-    var ref = firebase.database().ref().child("User/" + req.body.name);
+    var judgeName = req.body.name;
+    if (judgeName.includes(" ") >= 0) {
+        judgeName = judgeName.replace(/ /g, "_");
+
+    }
+    var judgeChildPath = judgesRef.child(judgeName);
+    var ref = firebase.database().ref().child("User/" + judgeName);
     ref.update({
-        "name": req.body.name,
+        "name": judgeName,
         "style": req.body.style,
         "country": req.body.country,
         "judge": true
@@ -292,9 +301,9 @@ app.post("/newJudge", urlencodedParser, function (req, res) {
     //finish user updating
     judgeChildPath.once('value', function (snapshot) {
         if (!snapshot || !snapshot.val()) {
-            console.log("new judge!!!");
+            console.log(judgeName);
             judgeChildPath.update({
-                "name": req.body.name,
+                "name": judgeName,
                 "experience": req.body.experience,
                 "style": req.body.style,
                 "styleVotes": 0,
@@ -308,7 +317,7 @@ app.post("/newJudge", urlencodedParser, function (req, res) {
             var pwr = snapshot.val().powerVotes;
             var abstr = snapshot.val().abstractVotes;
             judgeChildPath.update({
-                "name": req.body.name,
+                "name": judgeName,
                 "experience": req.body.experience,
                 "style": req.body.style,
                 "styleVotes": style,
@@ -483,8 +492,12 @@ app.get("/users", function (req, res) {
 })
 //lookup User
 app.get("/userPage/:name", function (req, res) {
-
-    var ref = firebase.database().ref().child("Users/" + req.params.name);
+    var userName = req.params.name;
+    if (userName.includes(' ') >= 0) {
+        userName.replace(/ /g, '_');
+    }
+    var ref = firebase.database().ref().child("Users/" + userName);
+    
     ref.once('value', (snapshot) => {
         if (!snapshot || !snapshot.val()) {
             res.render('user.ejs', {
@@ -500,12 +513,13 @@ app.get("/userPage/:name", function (req, res) {
                 judge: false
             })
         } else {
-            var userName = req.params.name;
-            if (userName.includes(' ') >= 0) {
-                userName.replace(/ /g, '_');
+            var printName = userName;
+            if (printName.includes('_') >= 0) {
+                printName = printName.replace(/_/g , ' ');
             }
+            console.log(printName);
             res.render('user.ejs', {
-                name: snapshot.val().name,
+                name: printName,
                 crew: snapshot.val().crew,
                 style: snapshot.val().style,
                 events: snapshot.val().events,
@@ -540,7 +554,7 @@ app.post("/newUser", urlencodedParser, function (req, res) {
 
     }
     //include lookup for user already existing in the database
-    var userChildPath = usersRef.child(req.body.name);
+    var userChildPath = usersRef.child(userName);
 
     userChildPath.update({
         "name": userName,

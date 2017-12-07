@@ -10,14 +10,29 @@
     <body>
         <div class="container">
             <div class="jumbotron">
-                    <h1>Competitors:</h1>
+                    <h1>VOTE</h1>
                     <% var judgePath = "/judgePage/" + name + "/vote"%>
                     <form name= "Judge Decision" method="POST" action=<%= judgePath%>>
-                        <% for(var i = 1; i < competitors.length; i++) {%>
-                        <%= competitors[i]%> : <input type= "radio" name = "winner"  value = <%= competitors[i]%> ><br>
-                        <% }%> 
-                        Tie: <input type="radio" name = "winner" value = "TIE"><br>
-            
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <h2>Competitor </h2>
+                                </tr>
+                            </thead>
+                            <% for(var i = 1; i < competitors.length; i++) {%>
+                                <tr>
+                                        <td>
+                                <%= competitors[i]%> : <input type= "radio" name = "winner"  value = <%= competitors[i]%> ><br>
+                            </td>
+                        </tr>                     
+                                <% }%> 
+                                <tr>
+                                        <td>
+                                Tie: <input type="radio" name = "winner" value = "TIE"><br>
+                            </td>
+                        </tr>  
+                               
+                        </table>
                         <input type="submit" value= "Vote!"/><br><br>
                         
                     </form>
