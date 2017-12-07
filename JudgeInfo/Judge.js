@@ -11,29 +11,32 @@ module.exports = function(){
     }
 
 }
-
+var app = require("../index");
 var addStats = function(judge, competitor){
-    console.log("current judge is " + judge.name + "with competitor" + competitor.name)
-    if(competitor == "TIE") {
-        return;
-    }
-
+    
     if(competitor.styleRanking < competitor.powerRanking
     && competitor.styleRanking < competitor.abstractRanking ) {
         //style more important than power
-        judge.styleVotes++;     
+        console.log("style went up");    
+        
+        judge.styleVotes = judge.styleVotes + 1;     
     }
     if(competitor.powerRanking < competitor.styleRanking
-    && competitor.powerRankingg < competitor.abstractRanking ) {
+    && competitor.powerRanking < competitor.abstractRanking ) {
         //style more important than power
-        judge.powerVotes++;     
+        judge.powerVotes = judge.powerVotes + 1; 
+        console.log("power went up");    
     }
 
     if(competitor.abstractRanking < competitor.powerRanking
     && competitor.abstractRanking < competitor.styleRanking) {
         //style more important than power
-        judge.abstractVotes++;     
+        
+        judge.abstractVotes = judge.abstractVotes + 1;
+        console.log("abstract went up");    
+        
     }
+    
 }
 var calcStats = function(Judge){
     var results= [3];

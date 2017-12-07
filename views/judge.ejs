@@ -24,10 +24,10 @@
             }
         }
         return{
-        
-        "style" : "Voted Style: " + judge.styleVotes/totalVotes * 100 + "% of the time",
-        "power" : "Voted Power: " + judge.powerVotes/totalVotes * 100 + "% of the time",
-        "abstract" : "Voted Abstract: " + judge.abstractVotes/totalVotes * 100 + "% of the time",
+            
+        "style" : parseFloat(judge.styleVotes/totalVotes * 100).toFixed(2),
+        "power" : parseFloat(judge.powerVotes/totalVotes * 100).toFixed(2) ,
+        "abstract" : parseFloat(judge.abstractVotes/totalVotes * 100).toFixed(2) ,
         }
     }
     %>
@@ -72,16 +72,17 @@
                             <%var stat = calcStats(judgeInfo)%>
                             <% console.log(stat)%>
                                         <tr>
+                                            
                                             <td> Style </td>
-                                            <td> <%=stat.style%></td>
+                                            <td> <%=stat.style%>%</td>
                                         </tr>
                                         <tr>
                                             <td> Power </td>
-                                            <td> <%=stat.power%></td>
+                                            <td> <%=stat.power%>%</td>
                                         </tr>
                                         <tr>
                                             <td> Abstract </td>
-                                            <td> <%= stat.abstract %></td>
+                                            <td> <%= stat.abstract %>%</td>
                                         </tr>
                             <%}%>
                         </tbody>

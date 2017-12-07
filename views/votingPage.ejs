@@ -11,9 +11,10 @@
         <h1>Competitors:</h1>
         <% var judgePath = "/judgePage/" + name + "/vote"%>
         <form name= "Judge Decision" method="POST" action=<%= judgePath%>>
-            <%= dancer1%> <input type="radio" name = "winner" value = <%= dancer1%>><br>
-            <%= dancer2%> <input type="radio" name = "winner" value = <%= dancer2%>><br>
-            tie: <input type="radio" name = "winner" value = "TIE"><br>
+            <% for(var i = 1; i < competitors.length; i++) {%>
+            <%= competitors[i]%> : <input type= "radio" name = "winner"  value = <%= competitors[i]%> ><br>
+            <% }%> 
+            Tie: <input type="radio" name = "winner" value = "TIE"><br>
 
             <input type="submit" value= "Vote!"/><br><br>
             

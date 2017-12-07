@@ -172,7 +172,7 @@ app.get("/eventPage/:name", function (req, res) {
                 eventName.replace(/ /g, '_');
             }
             var attendenceArray = Object.keys(snapshot.val().attendence);
-            
+
             res.render('events.ejs', {
 
                 eventName: snapshot.val().name,
@@ -193,14 +193,14 @@ app.get("/eventPage/:name", function (req, res) {
 });
 //
 //sign up for the event
-app.get("/eventPage/:eventName/signUp", function(req, res){
+app.get("/eventPage/:eventName/signUp", function (req, res) {
     console.log(req.params.eventName);
     res.render("../views/eventSignUp.ejs", {
         eventName: req.params.eventName
     });
 })
 
-app.post("/eventPage/:eventName/signUp",urlencodedParser, function(req, res){
+app.post("/eventPage/:eventName/signUp", urlencodedParser, function (req, res) {
     var eventName = req.params.eventName;
     if (eventName.includes(" ") >= 0) {
         eventName = eventName.replace(/ /g, "_");
@@ -239,27 +239,27 @@ app.get("/judgePage/:name", function (req, res) {
 
     var ref = firebase.database().ref().child("Judges/" + req.params.name);
 
-ref.once('value', (snapshot) => {
-    if (!snapshot || !snapshot.val()) {
-        res.render('judge.ejs', {
-            judgeName: "ERROR, JUDGE NOT REGISTERED/IN DATABASE",
-            experience: "N/A",
-            style: "N/A",
-            paradigms: "N/A",
-            judgeInfo: "NULL"
-        })
-    } else {
-        
-        res.render('judge.ejs', {
+    ref.once('value', (snapshot) => {
+        if (!snapshot || !snapshot.val()) {
+            res.render('judge.ejs', {
+                judgeName: "ERROR, JUDGE NOT REGISTERED/IN DATABASE",
+                experience: "N/A",
+                style: "N/A",
+                paradigms: "N/A",
+                judgeInfo: "NULL"
+            })
+        } else {
 
-            judgeName: snapshot.val().name,
-            experience: snapshot.val().experience,
-            style: snapshot.val().style,
-            paradigms: snapshot.val().paradigms,
-            judgeInfo: snapshot.val()
-        })
-    }
-});
+            res.render('judge.ejs', {
+
+                judgeName: snapshot.val().name,
+                experience: snapshot.val().experience,
+                style: snapshot.val().style,
+                paradigms: snapshot.val().paradigms,
+                judgeInfo: snapshot.val()
+            })
+        }
+    });
     //not found upload error page
 
 });
@@ -286,66 +286,99 @@ app.post("/newJudge", urlencodedParser, function (req, res) {
     });
 
     //finish user updating
-
-    judgeChildPath.update({
-        "name": req.body.name,
-        "experience": req.body.experience,
-        "style": req.body.style,
-        "styleVotes": 0,
-        "powerVotes": 0,
-        "abstractVotes": 0,
-        "foundationVotes": 0,
-        "paradigms": req.body.paradigms
-    }, function (error) {
-        if (error) {
-            res.render('successfulAdd.ejs', {
-                name: req.body.name,
-                typeOfNew: "Judge",
-                status: "Failed"
-            });
+    ref.once('value', function (snapshot) {
+        if (!snapshot || !snapshot.val()) {
+            judgeChildPath.update({
+                "name": req.body.name,
+                "experience": req.body.experience,
+                "style": req.body.style,
+                "styleVotes": 0,
+                "powerVotes": 0,
+                "abstractVotes": 0,
+                "foundationVotes": 0,
+                "paradigms": req.body.paradigms
+            })
         } else {
+            var style = snapshot.val().styleVotes;
+            var pwr = snapshot.val().powerVotes;
+            var abstr = snapshot.val().abstractVotes;
+            judgeChildPath.update({
+                "name": req.body.name,
+                "experience": req.body.experience,
+                "style": req.body.style,
+                "styleVotes": style,
+                "powerVotes": pwr,
+                "abstractVotes": abstr,
+                "foundationVotes": 0,
+                "paradigms": req.body.paradigms
+            }, function (error) {
+                if (error) {
+                    res.render('successfulAdd.ejs', {
+                        name: req.body.name,
+                        typeOfNew: "Judge",
+                        status: "Failed"
+                    });
+                } else {
 
-            res.render('successfulAdd.ejs', {
-                name: req.body.name,
-                typeOfNew: "Judge",
-                status: "Success"
+                    res.render('successfulAdd.ejs', {
+                        name: req.body.name,
+                        typeOfNew: "Judge",
+                        status: "Success"
+                    });
+                }
             });
         }
-    });
+    })
+
 })
 //vote judging
 //get round
-app.get("/judgePage/:name/vote", function (req, res) {
+//app.get("/judgePage/:name/vote", function (req, res) {
+app.get("/eventPage/:eventName/:name/vote", function (req, res) {
+    var ref = firebase.database().ref().child("Events/" + req.params.eventName);
+    ref.once('value', (snapshot) => {
 
-    res.render("../views/votingPage.ejs", {
-        dancer1: "Day",
-        dancer2: "Ice",
-        name: req.params.name
-    });
+        console.log("page found");
+        var eventName = snapshot.val().name;
+        if (eventName.includes(' ') >= 0) {
+            eventName.replace(/ /g, '_');
+        }
+        var attendenceArray = Object.keys(snapshot.val().attendence);
+
+        res.render("../views/votingPage.ejs", {
+            competitors: attendenceArray,
+            name: req.params.name
+        });
+    })
+
 })
 
 app.post("/judgePage/:name/vote", urlencodedParser, function (req, res) {
     console.log("voting done, calculating now!");
-
+    console.log(req.body.winner !== "TIE");
+    if (req.body.winner !== "TIE") {
+        console.log("decided winner is " + req.body.winner);
     var judge = require("./JudgeInfo/Judge");
     var ref1 = firebase.database().ref().child("Judges/" + req.params.name);
+        console.log("Users/" + req.body.winner);
+        getJudge(req, res).then(judge1 => {
+            getUser(req, res).then(user1 => {
+                judge.addStat(judge1, user1);
 
-    console.log("Users/" + req.body.winner);
-    getJudge(req, res).then(judge1 => {
-        getUser(req, res).then(user1 => {
-            judge.addStat(judge1, user1);
-            console.log(judge1);
 
-            ref1.update({
+                console.log(judge1);
+                console.log(user1);
+                ref1.update({
 
-                "styleVotes": judge1.styleVotes,
-                "powerVotes": judge1.powerVotes,
-                "abstractVotes": judge1.abstractVotes,
-            })
-            res.send(200);
+                    "styleVotes": judge1.styleVotes,
+                    "powerVotes": judge1.powerVotes,
+                    "abstractVotes": judge1.abstractVotes,
+                })
+                res.send(200);
+            }).catch(err => res.send(400))
         }).catch(err => res.send(400))
-    }).catch(err => res.send(400))
-
+    }
+    res.render("mainPage");
 })
 
 var getJudge = (req, res) => {
@@ -383,7 +416,6 @@ var getUser = (req, res) => {
         var user1 = {};
         var ref2 = firebase.database().ref().child("Users/" + req.body.winner);
         ref2.once('value', (snapshot) => {
-            console.log("the name of the user is " + snapshot.val().name + "\n\n\n");
             user1.name = snapshot.val().name,
                 user1.crew = snapshot.val().crew,
                 user1.styles = snapshot.val().styles,
@@ -440,7 +472,7 @@ app.get("/users", function (req, res) {
 })
 //lookup User
 app.get("/userPage/:name", function (req, res) {
-    
+
     var ref = firebase.database().ref().child("Users/" + req.params.name);
     ref.once('value', (snapshot) => {
         if (!snapshot || !snapshot.val()) {
@@ -490,7 +522,7 @@ app.get("/newUser", function (req, res) {
 });
 
 app.post("/newUser", urlencodedParser, function (req, res) {
-    
+
     var userName = req.body.name;
     if (userName.includes(" ") >= 0) {
         userName = userName.replace(/ /g, "_");

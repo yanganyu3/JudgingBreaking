@@ -51,8 +51,9 @@
                 <% for (var i = 0; i < judges.length; i++) { %>
 
                     <% var judgePath = "/judgePage/" + judges[i]; %>
-                    <% console.log(judgePath + "\n"); %>
-                    <li><a href=<%= judgePath %> > <%= judges[i ]%></a></li>
+                    <% var votePath = "/eventPage/" + eventName + "/" + judges[i] + "/vote"; %>
+                    
+                    <li><a href=<%= judgePath %> > <%= judges[i] %></a>  <a href=<%= votePath%>> Vote</a></li>
 
                 <% } %>
             </ul>
@@ -73,7 +74,7 @@
             <tbody> 
             <% if( attendence.length > 1 ) { %>
             <% for( var i = 1; i < attendence.length; i++) { %>
-                <% var path = "/judgePage/" + attendence[i]; %>
+                <% var path = "/userPage/" + attendence[i]; %>
                 
                 <tr>
                 <td> <a href=<%=path %>> <%=attendence[i]%></a> </td>
