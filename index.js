@@ -31,7 +31,10 @@ app.use(express.static(__dirname + "/public"));
 app.get("/", function (req, res) {
     res.render('mainPage.ejs');
 })
+app.get("/about", function(req, res){
 
+    res.render("about.ejs");
+})
 //listJudges
 app.get("/judges", function (req, res) {
     var arr = [];
@@ -168,14 +171,15 @@ app.get("/eventPage/:name", function (req, res) {
         } else {
             console.log("page found");
             var eventName = snapshot.val().name;
-            if (eventName.includes(' ') >= 0) {
-                eventName.replace(/ /g, '_');
+            var printName = eventName;
+            if (eventName.includes('_') >= 0) {
+                printName = eventName.replace(/_/g , ' ');
             }
             var attendenceArray = Object.keys(snapshot.val().attendence);
 
             res.render('events.ejs', {
 
-                eventName: snapshot.val().name,
+                eventName: printName,
                 judges: snapshot.val().judges,
                 location: snapshot.val().location,
                 style: snapshot.val().style,
@@ -277,7 +281,7 @@ app.post("/newJudge", urlencodedParser, function (req, res) {
     //include lookup for judge already existing in the database
     var judgeChildPath = judgesRef.child(req.body.name);
     //change user judge setting to true
-    var ref = firebase.database().ref().child("Users/" + req.body.name);
+    var ref = firebase.database().ref().child("User/" + req.body.name);
     ref.update({
         "name": req.body.name,
         "style": req.body.style,
@@ -286,8 +290,9 @@ app.post("/newJudge", urlencodedParser, function (req, res) {
     });
 
     //finish user updating
-    ref.once('value', function (snapshot) {
+    judgeChildPath.once('value', function (snapshot) {
         if (!snapshot || !snapshot.val()) {
+            console.log("new judge!!!");
             judgeChildPath.update({
                 "name": req.body.name,
                 "experience": req.body.experience,
@@ -360,6 +365,7 @@ app.post("/judgePage/:name/vote", urlencodedParser, function (req, res) {
         console.log("decided winner is " + req.body.winner);
     var judge = require("./JudgeInfo/Judge");
     var ref1 = firebase.database().ref().child("Judges/" + req.params.name);
+
         console.log("Users/" + req.body.winner);
         getJudge(req, res).then(judge1 => {
             getUser(req, res).then(user1 => {
@@ -368,13 +374,18 @@ app.post("/judgePage/:name/vote", urlencodedParser, function (req, res) {
 
                 console.log(judge1);
                 console.log(user1);
+                if (!snapshot || !snapshot.val()) {
+                    res.send(200);
+                
+            } else {
                 ref1.update({
-
-                    "styleVotes": judge1.styleVotes,
-                    "powerVotes": judge1.powerVotes,
-                    "abstractVotes": judge1.abstractVotes,
-                })
+                    
+                                        "styleVotes": judge1.styleVotes,
+                                        "powerVotes": judge1.powerVotes,
+                                        "abstractVotes": judge1.abstractVotes,
+                                    })
                 res.send(200);
+        }
             }).catch(err => res.send(400))
         }).catch(err => res.send(400))
     }

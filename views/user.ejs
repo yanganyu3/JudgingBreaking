@@ -1,39 +1,124 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset ="UTF-8">
-        <title><%= name %></title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">        
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>    </head>
-    <body>
-        <%include ./header.ejs%><br>
-        
-        <h1><%= name%></h1>
-        <h1>Crew:</h1>
-            <p><%= crew%></p>
-        <h1>Style</h1>
-            <p><%= style%></p>
-        <h1>Events Previously Attended</h1>
-            
-            <p><%= events%></p>
-        <h1>Country</h1>
-        
-            <p><%= country%></p>
-        <h1>Next Event</h1>
-            <p><%= nextEvent%></p>
-        <h2>Style Priority: <%= styleRanking%></h2>
-        <h2>Power Priority: <%= powerRanking%></h2>
-        <h2>Abstract Priority: <%= abstractRanking%></h2>
-        <% var path; %>
-        <%if (judge == true) {%>
-            <% path = "/judgePage/" + name; %>
-            <a href=<%=path %>><%=name%>'s Judge Page</a>
-        <% } else {%> 
-            <% path = "/newJudge" %>
-            <a href=<%=path %>> Make Judge Page</a>
-        <% }%>
-        
-    </body>
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= name %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> </head>
+
+<body>
+    <%include ./header.ejs%>
+        <br>
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1>
+                        <%= name%>
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <h2>Crew:
+                                <%= crew%>
+                            </h2>
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Style:
+                                <%= style%>
+                            </h2>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Country:
+                                <%= country%>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><h2>Events</h2></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Events Previously Attended</h2>
+                            <p>
+                                <%= events%>
+                            </p>
+
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Next Event</h2>
+                            <p>
+                                <%= nextEvent%>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><h2>Priority Preferences</h2></div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <h2>Priority Preferences</h2>
+                            <tr>
+                                <th>Categories</th>
+                                <th>Ranking</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Style Priority:</td>
+                                <td>
+                                    <%= styleRanking%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Power Priority: </td>
+                                <td>
+                                    <%= powerRanking%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Abstract Priority:</td>
+                                <td>
+                                    <%= abstractRanking%>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <% var path; %>
+                    <%if (judge == true) {%>
+                        <% path = "/judgePage/" + name; %>
+                            <a href=<%=path %>>
+                                <%=name%>'s Judge Page</a>
+                            <% } else {%>
+                                <% path = "/newJudge" %>
+                                    <a href=<%=path %>> Make Judge Page</a>
+                                    <% }%>
+            </div>
+        </div>
+
+
+
+</body>
+
 </html>

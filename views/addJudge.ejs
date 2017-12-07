@@ -8,16 +8,60 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     </head>
+    <style>
+        h1 {
+            text-align: center
+        }
+    </style>
     <body>
         <%include ./header.ejs%><br>
-        <form name= "judgeInput" method="POST" action="/newJudge">
-                Dancing Name: <input type="text" name= "name"/><br><br>
-                Number of years you have danced?: <input type="text" name= "experience"/><br><br>
-                What country do you represent?: <input type="text" name="country"/><br><br>
-                What Style(s) do you dance?: <input type="text" name="style"/><br><br>
-                Judging Paradigms/Preferences <input type="text" name="paradigms"/><br><br>
-                <input type="submit" value= "Submit Judge Info!"/><br><br>
-        </form>
+        <div class="container">
+                <div class="jumbotron">
+                        <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                            <h1>  Create Judge Page</h1>
+                                        </div>    
+                                </div>
+                                <div class="row">
+                                        <form name= "judgeInput" method="POST" action="/newJudge">
+                                            <div class="form-group">
+                                                <label for="name">Dancing Name:</label>
+                                                    
+                                                <input type="text" class="form-control" name= "name"/><br><br>
+                                                    
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="experience">Number of years you have danced?:</label>
+                                                    
+                                                <input type="text" class="form-control" name= "experience"/><br><br>
+                                                    
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="country">What country do you represent?:</label>
+                                                    
+                                                <input type="text" class="form-control" name="country"/><br><br>
+                                                    
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="style"> What Style(s) do you dance?:</label>
+                                                    
+                                                <input type="text" class="form-control" name="style"/><br><br>
+                                                    
+                                            </div>
+                                            <div class="form-group">
+                                                    <label for="paradigms">Judging Paradigms/Preferences</label>
+                                                    
+                                                    <textarea class="form-control" rows="5" name="paradigms"></textarea>
+                                            </div>
+                                            </div>
+                                            <input type="submit" value= "Submit Judge Info!"/><br><br>
+                                    </form>
+                                </div>
+                        </div>
+                </div>
+        </div>
+        
         
     </body>
 </html>
